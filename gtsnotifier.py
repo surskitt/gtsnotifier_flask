@@ -10,11 +10,10 @@ import os
 
 # Construct the config filename from the working directory of the script
 configPath = os.path.dirname(os.path.realpath(__file__))
-configFile = os.path.join(configPath, 'gts_notifier.cfg')
+configFile = os.path.join(configPath, 'gtsnotifier_flask.cfg')
 # Get the database location from the config file
 config = ConfigParser.RawConfigParser()
 config.read(configFile)
-config.read('/home/sharktamer/mysite/gtsnotifier_flask.cfg')
 DATABASE = config.get('config', 'DATABASE')
 PUSHAPPID = config.get('config', 'PUSHAPPID')
 
