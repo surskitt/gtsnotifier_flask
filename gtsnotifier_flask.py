@@ -8,11 +8,16 @@ import ConfigParser
 
 # configuration
 config = ConfigParser.RawConfigParser()
-config.read('gtsnotifier_flask.cfg')
+config.read('/home/sharktamer/mysite/gtsnotifier_flask.cfg')
 DATABASE = config.get('config', 'DATABASE')
 DEBUG = config.getboolean('config', 'DEBUG')
 SECRET_KEY = config.get('config', 'SECRET_KEY')
 PUSHAPPID = config.get('config', 'PUSHAPPID')
+# DATABASE = 'gtsnotifier_flask.db'
+# # DATABASE = '/home/sharktamer/mysite/gtsnotifier_flask.db'
+# DEBUG = False
+# SECRET_KEY = 'pisspies'
+# PUSHAPPID = 'axEnVejEhgH11pMZWrAdey9C66umz5'
 
 # create the flask app object
 app = flask.Flask(__name__)
@@ -165,7 +170,6 @@ def remove_user():
             'select pushoverUserAPI from users where profileId = ?',
             (profId,)
             ).fetchone()[0]
-        print pushId
         flask.g.db.execute('delete from users where profileId = ?', (profId,))
         flask.g.db.commit()
         flask.flash(

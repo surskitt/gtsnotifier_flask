@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/python
 
 # A script to notify the user when their deposited pokemon
 # has been successfully traded on the pokemon x and y gts
@@ -9,7 +9,7 @@ import sqlite3
 
 # Get the database location from the config file
 config = ConfigParser.RawConfigParser()
-config.read('gtsnotifier_flask.cfg')
+config.read('/home/sharktamer/mysite/gtsnotifier_flask.cfg')
 DATABASE = config.get('config', 'DATABASE')
 PUSHAPPID = config.get('config', 'PUSHAPPID')
 
