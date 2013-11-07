@@ -9,7 +9,7 @@ import os
 
 # Construct the config filename from the working directory of the script
 configPath = os.path.dirname(os.path.realpath(__file__))
-configFile = os.path.join(configPath, 'gts_notifier.cfg')
+configFile = os.path.join(configPath, 'gtsnotifier_flask.cfg')
 # configuration
 config = ConfigParser.RawConfigParser()
 config.read(configFile)
