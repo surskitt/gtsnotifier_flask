@@ -5,10 +5,14 @@ import flask
 from contextlib import closing
 import requests
 import ConfigParser
+import os
 
+# Construct the config filename from the working directory of the script
+configPath = os.path.dirname(os.path.realpath(__file__))
+configFile = os.path.join(configPath, 'gts_notifier.cfg')
 # configuration
 config = ConfigParser.RawConfigParser()
-config.read('gtsnotifier_flask.cfg')
+config.read(configFile)
 DATABASE = config.get('config', 'DATABASE')
 DEBUG = config.getboolean('config', 'DEBUG')
 SECRET_KEY = config.get('config', 'SECRET_KEY')
@@ -165,7 +169,6 @@ def remove_user():
             'select pushoverUserAPI from users where profileId = ?',
             (profId,)
             ).fetchone()[0]
-        print pushId
         flask.g.db.execute('delete from users where profileId = ?', (profId,))
         flask.g.db.commit()
         flask.flash(
