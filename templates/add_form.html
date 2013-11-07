@@ -1,0 +1,29 @@
+{% extends "skeleton.html" %}
+{% block body %}
+<form role="form" method="post" action="{{ url_for('add_user') }}">
+  <div class="input-group input-group-lg col-md-6 col-md-offset-3">
+      <span class="input-group-addon"><span class="glyphicon glyphicon-cloud-download"></span></span>
+      <input type="text" class="form-control" name="inputProfileId" placeholder="GTS profile ID">
+  </div>
+<!--   <div class="input-group input-group-lg col-md-6 col-md-offset-3">
+      <span class="input-group-addon"><span class="glyphicon glyphicon-cloud-upload"></span></span>
+      <input type="text" class="form-control" name="inputPushoverAppAPI" placeholder="Pushover app API">
+  </div> -->
+  <div class="input-group input-group-lg col-md-6 col-md-offset-3">
+      <span class="input-group-addon"><span class="glyphicon glyphicon-cloud-upload"></span></span>
+      <input type="text" class="form-control" name="inputPushoverUserAPI" placeholder="Pushover user API">
+  </div>
+  <div class="col-md-4 col-md-offset-4">
+    <button type="submit" class="btn btn-primary btn-lg btn-block" value="submit">Submit</button>
+  </div>
+</form>
+<ol class="breadcrumb col-md-6 col-md-offset-3" id="footer">
+  <li class="active">Submit</li>
+  <li><a href="/remove">Remove</a></li>
+  <li><a href="/about">About</a></li>
+  <li><a href="/help">Help</a></li>
+  <li><a href="#">Source</a></li>
+  <li><a href="#">Bugs</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ol>
+{% endblock %}

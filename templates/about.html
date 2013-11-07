@@ -1,0 +1,20 @@
+{% extends "skeleton.html" %}
+{% block body %}
+<div class="container" id="about_container">
+  <div class="col-md-8 col-md-offset-2">
+    <h3>About GTS notifier</h3>
+
+    <p>GTS notifier is a service that will send you notifications through <a href="pushover.net">pushover</a> when your trades on Pokemon X and Y's global trade station have been successful. You can receive these notifications using the <a href="https://pushover.net/clients">pushover clients</a>, available on both desktop and <a href="https://pushover.net/clients">mobile</a>.</p>
+    <p>New trades are checked for every hour. Higher limits are redundant, since the global link website updates GTS trades at an unknown interval much greater than an hour. This is a problem on the global link website's end and can not be fixed by me.</p>
+  </div>
+</div>
+<ol class="breadcrumb col-md-6 col-md-offset-3" id="footer">
+  <li><a href="/">Submit</a></li>
+  <li><a href="/remove">Remove</a></li>
+  <li class="active">About</li>
+  <li><a href="/help">Help</a></li>
+  <li><a href="#">Source</a></li>
+  <li><a href="#">Bugs</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ol>
+{% endblock %}

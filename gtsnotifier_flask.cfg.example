@@ -1,0 +1,5 @@
+[config]
+DATABASE = gtsnotifier_flask.db
+DEBUG = False
+SECRET_KEY = 
+PUSHAPPID = 

@@ -1,0 +1,20 @@
+{% extends "skeleton.html" %}
+{% block body %}
+<div class="container" id="about_container">
+  <div class="col-md-8 col-md-offset-2">
+    <h3>Help</h3>
+    <p>In order to use GTS notifier, you will first need to register accounts at the <a href="https://www.pokemon.com/us/account/pgl/signup/">pokemon global link</a> and <a href="https://pushover.net/login">pushover</a>. You will also need to make sure your pokemon GL GTS trades are visible. From the <a href="http://3ds.pokemon-gl.com/settings/">account settings</a>, select "change privacy settings" and make sure "Global Trade Station" is set to "Everyone".</p>
+    <!-- <h3>Submit form data</h3> -->
+    <p>You will need to supply the submit form with your Pokemon GL profile ID and your pushover app API key. Your GL profile ID can be found on the header of the site after logging in, in the form S-000-8108-Z. Your pushover app API key can be found on <a href="https://pushover.net/">the pushover main page</a>.</p>
+  </div>
+</div>
+<ol class="breadcrumb col-md-6 col-md-offset-3" id="footer">
+  <li><a href="/">Submit</a></li>
+  <li><a href="/remove">Remove</a></li>
+  <li><a href="/about">About</a></li>
+  <li class="active">Help</li>
+  <li><a href="#">Source</a></li>
+  <li><a href="#">Bugs</a></li>
+  <li><a href="/contact">Contact</a></li>
+</ol>
+{% endblock %}

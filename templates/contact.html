@@ -1,0 +1,24 @@
+{% extends "skeleton.html" %}
+{% block body %}
+<div class="container" id="contact_container">
+  <div class="col-md-8 col-md-offset-2">
+    <dl class="dl-horizontal">
+      <dt><img src="{{ url_for('static', filename='img/twitter-32-black.png') }}"></dt>
+      <dd><a href="https://twitter.com/sharktamer">@sharktamer</a></dd>
+      <dt><img src="{{ url_for('static', filename='img/email-32-black.png') }}"></dt>
+      <dd>priestoftime &lt;at&gt; gmail.com</dd>
+      <dt><img src="{{ url_for('static', filename='img/sa-black.png') }}"></dt>
+      <dd><a href="http://forums.somethingawful.com/private.php?action=newmessage&userid=181091">sharktamer</a></dd>
+    </dl>  
+  </div>
+</div>
+<ol class="breadcrumb col-md-6 col-md-offset-3" id="footer">
+  <li><a href="/">Submit</a></li>
+  <li><a href="/remove">Remove</a></li>
+  <li><a href="/about">About</a></li>
+  <li><a href="/help">Help</a></li>
+  <li><a href="#">Source</a></li>
+  <li><a href="#">Bugs</a></li>
+  <li class="active">Contact</li>
+</ol>
+{% endblock %}

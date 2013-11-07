@@ -1,0 +1,43 @@
+/*<div class="jumbotron" style="text-align: center; background-color: transparent">*/
+.jumbotron {
+  /*text-align: center;*/
+  background-color: transparent;
+  /*padding-bottom: 10px;*/
+}
+
+.container .input-group {
+  padding-bottom: 15px;
+}
+
+#footer {
+  background-color: transparent;
+  text-align: center;
+  padding-top: 20px;
+}
+
+.breadcrumb > li + li:before {
+  content: "✠\00a0";
+}
+
+#nFlash {
+  margin-top: -72px;
+  text-align: center;
+}
+
+#remove_button {
+  margin-top: 60px;
+}
+
+#about_container {
+  margin-top: -70px;
+  margin-bottom: 39px;
+}
+
+#contact_container {
+  margin-top: -70px;
+  margin-bottom: 120px;
+}
+
+dt img {
+  margin-top: -5px;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>GTS notifier</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Latest compiled and minified CSS -->
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="screen">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/extra.css') }}" media="screen">
+</head>
+<body>
+  <div class="container">
+    <div class="jumbotron text-center">
+      <img src="{{ url_for('static', filename='img/vivillon.png') }}">
+      <h1>GTS notifier</h1>
+      <div class="lead">
+        Notify through <a href="https://pushover.net/">pushover</a> when GTS trades complete.
+      </div>
+    </div>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+      <div class="{{ 'alert col-md-6 col-md-offset-3 alert-dismissable ' ~ category }}" id="nFlash">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ message }}
+      </div>
+    {% endfor %}
+    {% block body %}{% endblock %}
+  </div>
+
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
