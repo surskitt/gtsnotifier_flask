@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 # A script to notify the user when their deposited pokemon
 # has been successfully traded on the pokemon x and y gts
 
