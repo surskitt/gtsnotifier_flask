@@ -13,11 +13,6 @@ DATABASE = config.get('config', 'DATABASE')
 DEBUG = config.getboolean('config', 'DEBUG')
 SECRET_KEY = config.get('config', 'SECRET_KEY')
 PUSHAPPID = config.get('config', 'PUSHAPPID')
-# DATABASE = 'gtsnotifier_flask.db'
-# # DATABASE = '/home/sharktamer/mysite/gtsnotifier_flask.db'
-# DEBUG = False
-# SECRET_KEY = 'pisspies'
-# PUSHAPPID = 'axEnVejEhgH11pMZWrAdey9C66umz5'
 
 # create the flask app object
 app = flask.Flask(__name__)
