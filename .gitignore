@@ -1,7 +1,16 @@
 *.py[cod]
 
+# DB file
+*.db
+
+# Config
+*.cfg
+
 # C extensions
 *.so
+
+*.pyc
+
 
 # Packages
 *.egg
