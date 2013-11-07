@@ -6,10 +6,14 @@
 import requests
 import ConfigParser
 import sqlite3
+import os
 
+# Construct the config filename from the working directory of the script
+configPath = os.path.dirname(os.path.realpath(__file__))
+configFile = os.path.join(configPath, 'gts_notifier.cfg')
 # Get the database location from the config file
 config = ConfigParser.RawConfigParser()
-config.read('gtsnotifier_flask.cfg')
+config.read(configFile)
 DATABASE = config.get('config', 'DATABASE')
 PUSHAPPID = config.get('config', 'PUSHAPPID')
 
@@ -55,7 +59,7 @@ for user in users:
 
     # timestamp = config.get('State', 'timestamp')
     # If the trade has not been notified already, send a notification
-    if r_timestamp != timestamp:
+    if r_timestamp != timestamp and timestamp != 0:
         pushover_data = {
             'token': PUSHAPPID,
             'user': pushoverUserAPI,
