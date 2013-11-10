@@ -3,8 +3,8 @@
 <head>
   <title>GTS notifier</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Latest compiled and minified CSS -->
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.min.css') }}" media="screen">
+  <!-- <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/fuelux.min.css') }}" media="screen"> -->
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/extra.css') }}" media="screen">
 </head>
 <body>
@@ -13,7 +13,7 @@
       <img src="{{ url_for('static', filename='img/vivillon.png') }}">
       <h1>GTS notifier</h1>
       <div class="lead">
-        Notify through <a href="https://pushover.net/">pushover</a> when GTS trades complete.
+        Notify through <a href="/">pushover</a>, <a href="/">email</a> or <a href="/">twitter</a>   when GTS trades complete.
       </div>
     </div>
     {% for category, message in get_flashed_messages(with_categories=true) %}
