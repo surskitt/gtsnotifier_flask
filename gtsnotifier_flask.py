@@ -6,6 +6,8 @@ from contextlib import closing
 import requests
 import ConfigParser
 import os
+import smtplib
+from email.mime.text import MIMEText
 
 # Construct the config filename from the working directory of the script
 configPath = os.path.dirname(os.path.realpath(__file__))
@@ -50,10 +52,62 @@ def after_request(response):
     return response
 
 
+# @app.route('/<page>')
+# def route_page():
+#     return flask.render_template(page + ".html", currPage=page)
+
+
 # Render the home template when the base url is visited
 @app.route('/')
-def add_form():
-    return flask.render_template('add_form.html')
+def home_page():
+    return flask.redirect(flask.url_for('pushover_page'))
+
+
+@app.route('/pushover')
+def pushover_page():
+    return flask.render_template('pushover.html', currPage='pushover')
+
+
+@app.route('/email')
+def email_page():
+    return flask.render_template('email.html', currPage='email')
+
+
+@app.route('/twitter')
+def twitter_page():
+    return flask.render_template('twitter.html', currPage='twitter')
+
+
+@app.route('/remove')
+def remove_page():
+    return flask.render_template('remove.html', currPage='remove')
+
+
+@app.route('/about')
+def about_page():
+    return flask.render_template('about.html', currPage='about')
+
+
+@app.route('/help')
+def help_page():
+    return flask.render_template('help.html', currPage='help')
+
+
+@app.route('/source')
+def source_page():
+    return flask.redirect('https://github.com/sharktamer/gtsnotifier_flask')
+
+
+@app.route('/bugs')
+def bugs_page():
+    return flask.redirect(
+        'https://github.com/sharktamer/gtsnotifier_flask/issues?state=open'
+        )
+
+
+@app.route('/contact')
+def contact_page():
+    return flask.render_template('contact.html', currPage='contact')
 
 
 # Check if the entered profile ID is in the database
@@ -87,8 +141,8 @@ def checkPushInvalid(pushId):
 
 
 # view function for /add, the POST destination for the input form
-@app.route('/add_user', methods=['POST'])
-def add_user():
+@app.route('/add_pushover', methods=['POST'])
+def add_pushover():
 
     # Store the form input in accessible variables
     profId = flask.request.form['inputProfileId']
@@ -121,11 +175,12 @@ def add_user():
             elif 'USERS_SAVEDATA_ID' in line:
                 profSavedataId = line.split('\'')[1]
         # Insert the form values and the requested values into users database
-        flask.g.db.execute('insert into users values(?, ?, ?, ?, ?)', [
+        flask.g.db.execute('insert into users values(?, ?, ?, ?, ?, ?)', [
             profId,
             profAccountId,
             profSavedataId,
             pushId,
+            'pushover',
             0
         ])
         flask.g.db.commit()
@@ -145,12 +200,69 @@ def add_user():
         )
 
     # Return to the input form
-    return flask.redirect(flask.url_for('add_form'))
+    return flask.redirect(flask.url_for('pushover_page'))
 
 
-@app.route('/remove')
-def remove_form():
-    return flask.render_template('remove_form.html')
+# view function for /add, the POST destination for the input form
+@app.route('/add_email', methods=['POST'])
+def add_email():
+
+    # Store the form input in accessible variables
+    profId = flask.request.form['inputProfileId']
+    email = flask.request.form['inputEmail']
+
+    # If either of the form inputs are blank...
+    if '' in (profId, email):
+        # Create a message to be sent along with the return request
+        flask.flash('Please enter a valid profile ID', 'alert-danger')
+    elif checkProfInDB(profId):
+        flask.flash(
+            'Your ID has already been added to the database',
+            'alert-danger'
+        )
+    elif checkProfInvalid(profId):
+        flask.flash(
+            'Your profile ID is invalid or your gts trades are not visible',
+            'alert-danger'
+        )
+    else:
+        profile = requests.get(
+            'http://3ds.pokemon-gl.com/user/%s/gts/' % profId
+        )
+        # Parse the user profile for account/savedata ids, for the gts request
+        for line in profile.content.split('\n'):
+            if 'USERS_ACCOUNT_ID' in line:
+                profAccountId = line.split('\'')[1]
+            elif 'USERS_SAVEDATA_ID' in line:
+                profSavedataId = line.split('\'')[1]
+        # Insert the form values and the requested values into users database
+        flask.g.db.execute('insert into users values(?, ?, ?, ?, ?, ?)', [
+            profId,
+            profAccountId,
+            profSavedataId,
+            email,
+            'email',
+            0
+        ])
+        flask.g.db.commit()
+        flask.flash(
+            'Your profile was successfully added to the database',
+            'alert-success'
+        )
+        # Send the user a success email
+        msg = MIMEText('Your email address has been added')
+        msg['Subject'] = 'Success'
+        msg['From'] = 'gtsnotifier@gmail.com'
+        msg['To'] = email
+        s = smtplib.SMTP('smtp.gmail.com:587')
+        s.ehlo()
+        s.starttls()
+        s.login('globaltradenotifier@gmail.com', 'tetsuoshima')
+        s.sendmail('globaltradenotifier@gmail.com', email, msg.as_string())
+        s.quit()
+
+    # Return to the input form
+    return flask.redirect(flask.url_for('email_page'))
 
 
 @app.route('/remove_user', methods=['POST'])
@@ -165,43 +277,29 @@ def remove_user():
             'alert-danger'
         )
     else:
-        pushId = flask.g.db.execute(
-            'select pushoverUserAPI from users where profileId = ?',
-            (profId,)
-            ).fetchone()[0]
+        # pushId = flask.g.db.execute(
+        #     'select pushoverUserAPI from users where profileId = ?',
+        #     (profId,)
+        # ).fetchone()[0]
         flask.g.db.execute('delete from users where profileId = ?', (profId,))
         flask.g.db.commit()
         flask.flash(
             'Your profile was successfully removed from the database',
             'alert-success'
         )
-        pushover_data = {
-            'token': PUSHAPPID,
-            'user': pushId,
-            'message': 'Your profile has been removed successfully',
-        }
-        requests.post(
-            'https://api.pushover.net/1/messages.json',
-            data=pushover_data
-        )
+        # pushover_data = {
+        #     'token': PUSHAPPID,
+        #     'user': pushId,
+        #     'message': 'Your profile has been removed successfully',
+        # }
+        # requests.post(
+        #     'https://api.pushover.net/1/messages.json',
+        #     data=pushover_data
+        # )
 
     # Return to the remove form
-    return flask.redirect(flask.url_for('remove_form'))
+    return flask.redirect(flask.url_for('remove_page'))
 
-
-@app.route('/about')
-def about_page():
-    return flask.render_template('about.html')
-
-
-@app.route('/contact')
-def contact_page():
-    return flask.render_template('contact.html')
-
-
-@app.route('/help')
-def help_page():
-    return flask.render_template('help.html')
 
 # Execute the script if it is run manually
 if __name__ == '__main__':

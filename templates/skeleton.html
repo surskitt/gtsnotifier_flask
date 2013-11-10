@@ -13,7 +13,24 @@
       <img src="{{ url_for('static', filename='img/vivillon.png') }}">
       <h1>GTS notifier</h1>
       <div class="lead">
-        Notify through <a href="/">pushover</a>, <a href="/">email</a> or <a href="/">twitter</a>   when GTS trades complete.
+        Notify through
+        {% if currPage == 'pushover' %}
+        pushover,
+        {% else %}
+        <a href="/pushover">pushover</a>,
+        {% endif %}
+        {% if currPage == 'email' %}
+        email
+        {% else %}
+        <a href="/email">email</a>
+        {% endif %}
+        or
+        {% if currPage == 'twitter' %}
+        twitter
+        {% else %}
+        <a href="/twitter">twitter</a>
+        {% endif %}
+        when GTS trades complete.
       </div>
     </div>
     {% for category, message in get_flashed_messages(with_categories=true) %}
@@ -23,6 +40,15 @@
       </div>
     {% endfor %}
     {% block body %}{% endblock %}
+    <ol class="breadcrumb col-md-6 col-md-offset-3" id="footer">
+    {% for page in ['remove', 'about', 'help', 'source', 'bugs', 'contact'] %}
+      {% if page != currPage %}
+      <li><a href='{{ page }}'>{{ page|title }}</a></li>
+      {% else %}
+      <li class="active">{{ page|title }}</li>
+      {% endif %}
+    {% endfor %}
+    </ol>
   </div>
 
 

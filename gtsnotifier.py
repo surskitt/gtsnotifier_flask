@@ -5,6 +5,8 @@ import requests
 import ConfigParser
 import sqlite3
 import os
+import smtplib
+from email.mime.text import MIMEText
 
 # Construct the config filename from the working directory of the script
 configPath = os.path.dirname(os.path.realpath(__file__))
@@ -20,7 +22,7 @@ users = db.execute('select * from users').fetchall()
 
 for user in users:
     # Store the columns in variables
-    profileId, profAccountId, profSavedataId, pushoverUserAPI, timestamp = user
+    profileId, profAccountId, profSavedataId, dest, destType, timestamp = user
 
     # Construct the request header and data
     r_headers = {
@@ -57,17 +59,30 @@ for user in users:
 
     # timestamp = config.get('State', 'timestamp')
     # If the trade has not been notified already, send a notification
-    if r_timestamp != timestamp and timestamp != 0:
-        pushover_data = {
-            'token': PUSHAPPID,
-            'user': pushoverUserAPI,
-            'message': message,
-        }
-        requests.post(
-            'https://api.pushover.net/1/messages.json',
-            data=pushover_data
-        )
-        # Write the time of the last trade to the config
+    if r_timestamp != timestamp:
+        if destType == u'pushover':
+            pushover_data = {
+                'token': PUSHAPPID,
+                'user': dest,
+                'message': message,
+            }
+            requests.post(
+                'https://api.pushover.net/1/messages.json',
+                data=pushover_data
+            )
+        elif destType == u'email':
+            msg = MIMEText(message)
+            msg['Subject'] = message
+            msg['From'] = 'gtsnotifier@gmail.com'
+            msg['To'] = dest
+            s = smtplib.SMTP('smtp.gmail.com:587')
+            s.ehlo()
+            s.starttls()
+            s.login('globaltradenotifier@gmail.com', 'tetsuoshima')
+            s.sendmail('globaltradenotifier@gmail.com', dest, msg.as_string())
+            s.quit()
+
+        # Write the time of the last trade to the database
         db.execute(
             'update users set timestamp = ? where profileId = ?',
             (r_timestamp, profileId)
