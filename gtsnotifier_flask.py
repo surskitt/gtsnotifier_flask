@@ -19,6 +19,8 @@ DATABASE = config.get('config', 'DATABASE')
 DEBUG = config.getboolean('config', 'DEBUG')
 SECRET_KEY = config.get('config', 'SECRET_KEY')
 PUSHAPPID = config.get('config', 'PUSHAPPID')
+GTS_EMAIL = config.get('config', 'GTS_EMAIL')
+GTS_EMAIL_PASS = config.get('config', 'GTS_EMAIL_PASS')
 
 # create the flask app object
 app = flask.Flask(__name__)
@@ -252,13 +254,13 @@ def add_email():
         # Send the user a success email
         msg = MIMEText('Your email address has been added')
         msg['Subject'] = 'Success'
-        msg['From'] = 'gtsnotifier@gmail.com'
+        msg['From'] = GTS_EMAIL
         msg['To'] = email
         s = smtplib.SMTP('smtp.gmail.com:587')
         s.ehlo()
         s.starttls()
-        s.login('globaltradenotifier@gmail.com', 'tetsuoshima')
-        s.sendmail('globaltradenotifier@gmail.com', email, msg.as_string())
+        s.login(GTS_EMAIL, GTS_EMAIL_PASS)
+        s.sendmail(GTS_EMAIL, email, msg.as_string())
         s.quit()
 
     # Return to the input form

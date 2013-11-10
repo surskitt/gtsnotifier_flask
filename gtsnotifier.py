@@ -16,6 +16,8 @@ config = ConfigParser.RawConfigParser()
 config.read(configFile)
 DATABASE = config.get('config', 'DATABASE')
 PUSHAPPID = config.get('config', 'PUSHAPPID')
+GTS_EMAIL = config.get('config', 'GTS_EMAIL')
+GTS_EMAIL_PASS = config.get('config', 'GTS_EMAIL_PASS')
 
 db = sqlite3.connect(DATABASE)
 users = db.execute('select * from users').fetchall()
@@ -73,13 +75,13 @@ for user in users:
         elif destType == u'email':
             msg = MIMEText(message)
             msg['Subject'] = message
-            msg['From'] = 'gtsnotifier@gmail.com'
+            msg['From'] = GTS_EMAIL
             msg['To'] = dest
             s = smtplib.SMTP('smtp.gmail.com:587')
             s.ehlo()
             s.starttls()
-            s.login('globaltradenotifier@gmail.com', 'tetsuoshima')
-            s.sendmail('globaltradenotifier@gmail.com', dest, msg.as_string())
+            s.login(GTS_EMAIL, GTS_EMAIL_PASS)
+            s.sendmail(GTS_EMAIL, dest, msg.as_string())
             s.quit()
 
         # Write the time of the last trade to the database
