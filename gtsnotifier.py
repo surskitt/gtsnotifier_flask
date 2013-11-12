@@ -54,41 +54,44 @@ for user in users:
 
     # Parse the json for the names of the pokemon and the time of the trade
     tradeData = r.json()
-    recPoke = tradeData['tradeList'][0]['tradePokemon']['name']
-    sentPoke = tradeData['tradeList'][0]['postSimple']['name']
-    r_timestamp = tradeData['tradeList'][0]['tradeDate']
-    message = 'Your ' + sentPoke + ' was successfully traded for ' + recPoke
 
-    # timestamp = config.get('State', 'timestamp')
-    # If the trade has not been notified already, send a notification
-    if r_timestamp != timestamp:
-        if destType == u'pushover':
-            pushover_data = {
-                'token': PUSHAPPID,
-                'user': dest,
-                'message': message,
-            }
-            requests.post(
-                'https://api.pushover.net/1/messages.json',
-                data=pushover_data
+    # tradeList will only exist in keys if the profile is public
+    if 'tradeList' in tradeData:
+        recPoke = tradeData['tradeList'][0]['tradePokemon']['name']
+        sentPoke = tradeData['tradeList'][0]['postSimple']['name']
+        r_timestamp = tradeData['tradeList'][0]['tradeDate']
+        msg = 'Your ' + sentPoke + ' was successfully traded for ' + recPoke
+
+        # timestamp = config.get('State', 'timestamp')
+        # If the trade has not been notified already, send a notification
+        if r_timestamp != timestamp:
+            if destType == u'pushover':
+                pushover_data = {
+                    'token': PUSHAPPID,
+                    'user': dest,
+                    'message': msg,
+                }
+                requests.post(
+                    'https://api.pushover.net/1/messages.json',
+                    data=pushover_data
+                )
+            elif destType == u'email':
+                msg = MIMEText(msg)
+                msg['Subject'] = msg
+                msg['From'] = GTS_EMAIL
+                msg['To'] = dest
+                s = smtplib.SMTP('smtp.gmail.com:587')
+                s.ehlo()
+                s.starttls()
+                s.login(GTS_EMAIL, GTS_EMAIL_PASS)
+                s.sendmail(GTS_EMAIL, dest, msg.as_string())
+                s.quit()
+
+            # Write the time of the last trade to the database
+            db.execute(
+                'update users set timestamp = ? where profileId = ?',
+                (r_timestamp, profileId)
             )
-        elif destType == u'email':
-            msg = MIMEText(message)
-            msg['Subject'] = message
-            msg['From'] = GTS_EMAIL
-            msg['To'] = dest
-            s = smtplib.SMTP('smtp.gmail.com:587')
-            s.ehlo()
-            s.starttls()
-            s.login(GTS_EMAIL, GTS_EMAIL_PASS)
-            s.sendmail(GTS_EMAIL, dest, msg.as_string())
-            s.quit()
-
-        # Write the time of the last trade to the database
-        db.execute(
-            'update users set timestamp = ? where profileId = ?',
-            (r_timestamp, profileId)
-        )
-        db.commit()
+            db.commit()
 
 db.close()
