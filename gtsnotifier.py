@@ -76,15 +76,15 @@ for user in users:
                     data=pushover_data
                 )
             elif destType == u'email':
-                msg = MIMEText(msg)
-                msg['Subject'] = msg
-                msg['From'] = GTS_EMAIL
-                msg['To'] = dest
+                mail = MIMEText(msg)
+                mail['Subject'] = msg
+                mail['From'] = GTS_EMAIL
+                mail['To'] = dest
                 s = smtplib.SMTP('smtp.gmail.com:587')
                 s.ehlo()
                 s.starttls()
                 s.login(GTS_EMAIL, GTS_EMAIL_PASS)
-                s.sendmail(GTS_EMAIL, dest, msg.as_string())
+                s.sendmail(GTS_EMAIL, dest, mail.as_string())
                 s.quit()
 
             # Write the time of the last trade to the database
